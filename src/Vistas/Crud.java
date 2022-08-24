@@ -1,31 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vistas;
 
 import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultTreeModel;
 
-/**
- *
- * @author julio
- */
 public class Crud extends javax.swing.JFrame {
 
     DefaultTableModel model;
-    String header[] = {"CODIGO", "NOMBRE", "SALARIO"};
+    String header[] = {"CODIGO", "NOMBRE", "SALARIO"}; // 
 
     public Crud() {
         initComponents();
         setTitle("CRUD PERSONAL");
         setLocationRelativeTo(this);
-
         model = new DefaultTableModel(null, header);
         listaPersonal.setModel(model);
-
     }
+
     private void limpiarInput() {
         txtCodigo.setText("");
         txtNombre.setText("");
@@ -63,6 +52,11 @@ public class Crud extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        listaPersonal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaPersonalMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(listaPersonal);
 
         txtCodigo.setBackground(new java.awt.Color(255, 255, 255));
@@ -95,6 +89,11 @@ public class Crud extends javax.swing.JFrame {
         btnEliminar.setBackground(new java.awt.Color(255, 51, 51));
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("ELIMINAR");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnAñadir.setBackground(new java.awt.Color(9, 138, 69));
         btnAñadir.setForeground(new java.awt.Color(255, 255, 255));
@@ -170,18 +169,54 @@ public class Crud extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAñadirActionPerformed
-//        String data[] = new String[header.length];
-        String data[] = {txtCodigo.getText(),txtNombre.getText(),txtSalario.getText()};
-//        data[0] = txtCodigo.getText();
-//        data[1] = txtNombre.getText();
-//        data[2] = txtSalario.getText();
+        if (txtCodigo.getText().length() < 1) {
+            System.out.println("INGRESA EL CODIGO");
+            return;
+        }
+        if (txtNombre.getText().length() < 1) {
+            System.out.println("INGRESA EL NOMBRE");
+            return;
+        }
+        if (txtSalario.getText().length() < 1) {
+            System.out.println("INGRESA EL SALARIO");
+            return;
+        }
+
+        String data[] = new String[header.length];
+
+        data[0] = txtCodigo.getText();
+        data[1] = txtNombre.getText();
+        data[2] = txtSalario.getText();
         model.addRow(data);
         limpiarInput();
     }//GEN-LAST:event_btnAñadirActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        
+        //MODIFICANDO DATOS
+        int fila = listaPersonal.getSelectedRow();
+        listaPersonal.setValueAt(txtCodigo.getText(), fila, 0);
+        listaPersonal.setValueAt(txtNombre.getText(), fila, 1);
+        listaPersonal.setValueAt(txtSalario.getText(), fila, 2);
+        limpiarInput();
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // ELIMINAR REGISTROS
+        int fila = listaPersonal.getSelectedRow();
+        if (fila >= 0) {
+            model.removeRow(fila);
+            limpiarInput();
+        } else {
+            System.out.println("POR FAVOR SELECCIONA UNA FILA");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void listaPersonalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaPersonalMouseClicked
+        int fila = listaPersonal.getSelectedRow();
+        txtCodigo.setText(listaPersonal.getValueAt(fila, 0).toString());
+        txtNombre.setText(listaPersonal.getValueAt(fila, 1).toString());
+        txtSalario.setText(listaPersonal.getValueAt(fila, 2).toString());
+    }//GEN-LAST:event_listaPersonalMouseClicked
 
     /**
      * @param args the command line arguments
